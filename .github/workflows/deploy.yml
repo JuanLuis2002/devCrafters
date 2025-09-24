@@ -29,9 +29,9 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            sudo docker stop nginx-proxy_nginx-proxy_1 || true
-            sudo docker stop nginx-proxy_app-php-container_1 || true
-            sudo docker rm nginx-proxy_nginx-proxy_1 || true
-            sudo docker rm nginx-proxy_app-php-container_1 || true
+            docker stop nginx-proxy_nginx-proxy_1 || true
+            docker stop nginx-proxy_app-php-container_1 || true
+            docker rm nginx-proxy_nginx-proxy_1 || true
+            docker rm nginx-proxy_app-php-container_1 || true
             cd /home/nginx-proxy
             sudo docker-compose up -d
