@@ -1,0 +1,36 @@
+name: Deploy PHP App to VPS (no git)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Copy files to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "."
+          target: "/home/appPHP"
+
+      - name: Restart Docker container
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            docker stop app-php-container || true
+            docker rm app-php-container || true
+            cd /home/appPHP
+            docker build -t mi-app-php .
+            docker run -d --name app-php-container -p 80:80 mi-app-php
