@@ -29,8 +29,5 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            docker stop app-php-container || true
-            docker rm app-php-container || true
-            cd /home/appPHP
-            docker build -t mi-app-php .
-            docker run -d --name app-php-container -p 80:80 mi-app-php
+            cd /home/nginx-proxy
+            docker-compose up -d
